@@ -110,7 +110,7 @@ npm run db-seed
 ```
 
 ### Add new info
-  * POST `/api/hotel/`
+  * POST `/api/hotel`
   * POST `/api/vacancy`
   * POST `/api/price`
 
