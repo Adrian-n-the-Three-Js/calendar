@@ -43,7 +43,7 @@ app.get('/api/calendar/db/:hotelIdOrName', (req, res) => {
 
 
 
-
+//// Hotel ////
 //Create
 app.post('/api/hotel/create', (req, res) => {
 
@@ -55,6 +55,7 @@ app.post('/api/hotel/create', (req, res) => {
   console.log('CRUD - Create NEW HOTEL RECORD');
   let q = req.body;
   const newHotel = {
+    id: q.id || 1,
     hotelName: q.hotelName || 'SampleHotel',
     roomsTotal: q.Number || 10,
     maxGuestPerRoom: q.Number || 10
@@ -76,7 +77,7 @@ app.post('/api/hotel/create', (req, res) => {
 });
 
 //Read
-app.get('/api/hotel/read', (req, res) => {
+app.get('/api/hotel', (req, res) => {
   //If no data
   if (req.body === undefined) {
     res.status(400).send('Bad Request');
@@ -91,7 +92,7 @@ app.get('/api/hotel/read', (req, res) => {
 
 
 //Read - 2
-app.get('/api/hotel/read/:id', (req, res) => {
+app.get('/api/hotel/:id', (req, res) => {
   let q = req.params.id;
   let parsed = parseInt(q);
   db.hotelModel.find({id: parsed})
@@ -100,7 +101,7 @@ app.get('/api/hotel/read/:id', (req, res) => {
 });
 
 //Update
-app.patch('/api/hotel/update', (req, res) => {
+app.patch('/api/hotel', (req, res) => {
   //If no data
   if (req.body === undefined) {
     res.status(400).send('Bad Request');
@@ -117,7 +118,7 @@ app.patch('/api/hotel/update', (req, res) => {
 });
 
 //Delete
-app.delete('/api/hotel/delete:id', (req, res) => {
+app.delete('/api/hotel/:id', (req, res) => {
   let q = req.params.id;
   let parsed = parseInt(q);
   db.hotelModel.deleteOne({id: parsed})
@@ -132,7 +133,7 @@ app.delete('/api/hotel/delete:id', (req, res) => {
 
 //// Vacancy ////
 //Create
-app.post('/api/vacancy/create', (req, res) => {
+app.post('/api/vacancy', (req, res) => {
 
   //If no data
   if (req.body === undefined) {
@@ -141,13 +142,14 @@ app.post('/api/vacancy/create', (req, res) => {
 
   console.log('CRUD - Create NEW HOTEL RECORD');
   let q = req.body;
-  const newHotel = {
+  const newRoom = {
+    id: q.id || 1,
     hotelId: q.hotelId || 1,
     date: q.date || 'Funny Today',
     isBooked: q.isBooked || true
   };
 
-  db.vacancyModel.create(newHotel, (err, data) => {
+  db.vacancyModel.create(newRoom, (err, data) => {
     console.log('QUERY SENT - Vacancy');
     if (err) {
       console.log('Bad Create ERROR', err);
@@ -160,7 +162,7 @@ app.post('/api/vacancy/create', (req, res) => {
 });
 
 //Read
-app.get('/api/vacancy/read', (req, res) => {
+app.get('/api/vacancy', (req, res) => {
   //If no data
   if (req.body === undefined) {
     res.status(400).send('Bad Request');
@@ -175,16 +177,16 @@ app.get('/api/vacancy/read', (req, res) => {
 
 
 //Read - 2
-app.get('/api/vacancy/read/:id', (req, res) => {
+app.get('/api/vacancy/:id', (req, res) => {
   let q = req.params.id;
   let parsed = parseInt(q);
-  db.vacancyModel.find({hotelId: parsed})
+  db.vacancyModel.find({id: parsed})
     .then( (d)=> res.status(200).send(d))
     .catch( (e)=> res.status(400).send('Bad Read Request: ', e));
 });
 
 //Update
-app.patch('/api/vacancy/update', (req, res) => {
+app.patch('/api/vacancy', (req, res) => {
   //If no data
   if (req.body === undefined) {
     res.status(400).send('Bad Request');
@@ -201,7 +203,7 @@ app.patch('/api/vacancy/update', (req, res) => {
 });
 
 //Delete
-app.delete('/api/vacancy/delete:id', (req, res) => {
+app.delete('/api/vacancy/:id', (req, res) => {
   let q = req.params.id;
   let parsed = parseInt(q);
   db.hotelModel.deleteOne({id: parsed})
@@ -214,7 +216,7 @@ app.delete('/api/vacancy/delete:id', (req, res) => {
 
 //// Price ////
 //Create
-app.post('/api/price/create', (req, res) => {
+app.post('/api/price', (req, res) => {
 
   //If no data
   if (req.body === undefined) {
@@ -223,13 +225,14 @@ app.post('/api/price/create', (req, res) => {
 
   console.log('CRUD - Create NEW Price RECORD');
   let q = req.body;
-  const newHotel = {
+  const newService = {
+    id: q.id || 1,
     hotelId: q.hotelId || 1,
     serviceName: q.serviceName || 'Free Service',
     price: q.price || 0
   };
 
-  db.priceModel.create(newHotel, (err, data) => {
+  db.priceModel.create(newService, (err, data) => {
     console.log('QUERY SENT - Vacancy');
     if (err) {
       console.log('Bad Create ERROR', err);
@@ -242,7 +245,7 @@ app.post('/api/price/create', (req, res) => {
 });
 
 //Read
-app.get('/api/price/read', (req, res) => {
+app.get('/api/price', (req, res) => {
   //If no data
   if (req.body === undefined) {
     res.status(400).send('Bad Request');
@@ -257,16 +260,16 @@ app.get('/api/price/read', (req, res) => {
 
 
 //Read - 2
-app.get('/api/price/read/:id', (req, res) => {
+app.get('/api/price/:id', (req, res) => {
   let q = req.params.id;
   let parsed = parseInt(q);
-  db.priceModel.find({hotelId: parsed})
+  db.priceModel.find({id: parsed})
     .then( (d)=> res.status(200).send(d))
     .catch( (e)=> res.status(400).send('Bad Read Request: ', e));
 });
 
 //Update
-app.patch('/api/price/update', (req, res) => {
+app.patch('/api/price', (req, res) => {
   //If no data
   if (req.body === undefined) {
     res.status(400).send('Bad Request');
@@ -283,7 +286,7 @@ app.patch('/api/price/update', (req, res) => {
 });
 
 //Delete
-app.delete('/api/price/delete/:id', (req, res) => {
+app.delete('/api/price/:id', (req, res) => {
   let q = req.body.id;
   let parsed = parseInt(q);
   db.priceModel.deleteOne({id: parsed})

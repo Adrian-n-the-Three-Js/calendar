@@ -58,10 +58,10 @@ npm run db-seed
 
 ### General Format for CRUD
 
-* POST `/api/[dbName]/create`
-* GET `/api/hotel/read/:id` or `/api/[dbName]/read/:hotelId`
-* PATCH `/api/[dbName]/update`
-* DELETE `/api/[dbName]/delete/:id`
+* POST `/api/[dbName]`
+* GET `/api/[dbName]/:id`
+* PATCH `/api/[dbName]`
+* DELETE `/api/[dbName]/:id`
 
 #### list of DBs
 * hotel - DB for hotel info (name, total rooms, max guest per room, etc)
@@ -69,13 +69,12 @@ npm run db-seed
 * price - DB for room services
 
 ### Get info
-  * GET `/api/hotel/read/:id`
-  * GET `/api/vacancy/read/:hotelId`
-  * GET `/api/price/read/:hotelId`
+  * GET `/api/hotel/:id`
+  * GET `/api/vacancy/:id`
+  * GET `/api/price/:id`
 
 **Path Parameters:**
-  * `id` hotel id
-  * `hotelId` hotel id
+  * `id` id
 
 **Success Status Code:** `200`
 
@@ -111,9 +110,9 @@ npm run db-seed
 ```
 
 ### Add new info
-  * POST `/api/hotel/create/:id`
-  * POST `/api/vacancy/create/:hotelId`
-  * POST `/api/price/create/:hotelId`
+  * POST `/api/hotel/`
+  * POST `/api/vacancy`
+  * POST `/api/price`
 
 **Success Status Code:** `201`
 
@@ -124,13 +123,12 @@ The request format should follow the same format from Get/Read API response.
 ```
 
 ### Update info
-  * PATCH `/api/hotel/update/:id`
-  * PATCH `/api/vacancy/update/:hotelId`
-  * PATCH `/api/price/update/:hotelId`
+  * PATCH `/api/hotel/:id`
+  * PATCH `/api/vacancy/:id`
+  * PATCH `/api/price/:id`
 
 **Path Parameters:**
-  * `id` hotel id
-  * `hotelId` hotel id
+  * `id` id
 
 **Success Status Code:** `204`
 
@@ -157,9 +155,9 @@ The request format should follow the same format from Get/Read API response.
 ```
 
 ### Delete info
-  * DELETE `/api/hotel/delete/:id`
-  * DELETE `/api/vacancy/delete/:id`
-  * DELETE `/api/price/delete/:id`
+  * DELETE `/api/hotel/:id`
+  * DELETE `/api/vacancy/:id`
+  * DELETE `/api/price/:id`
 
 **Path Parameters:**
   * `id` hotel id / service id / price id
