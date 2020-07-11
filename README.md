@@ -64,14 +64,18 @@ npm run db-seed
 * DELETE `/api/[dbName]/:id`
 
 #### list of DBs
-* hotel - DB for hotel info (name, total rooms, max guest per room, etc)
-* vacancy - DB for room status
-* price - DB for room services
+* hotels - DB for hotel info (name, total rooms, max guest per room, etc)
+* hotelRooms - DB for Rooms ( type of room, and is it booked or bookable )
+* roomReservation - DB for Reservation information about the specific room
+* hotelServices - DB for Room Services available at the specific hotel
+* serviceDetails - DB for serviceAvailability based on roomType
 
 ### Get info
   * GET `/api/hotel/:id`
-  * GET `/api/vacancy/:id`
-  * GET `/api/price/:id`
+  * GET `/api/hotelRoom/:id`
+  * GET `/api/roomReservation/:id`
+  * GET `/api/hotelService/:id`
+  * GET `/api/serviceDetail/:id`
 
 **Path Parameters:**
   * `id` id
@@ -83,36 +87,58 @@ npm run db-seed
 ```json
     {
       "id": "{ type: Number, unique: true }",
-      "hotelName": "{type: String, minlength: 1, maxlength: 40}",
-      "roomsTotal": "{type: Number, min: 1}",
-      "maxGuestPerRoom": "{type: Number, min: 1}"
+      "name": "{type: String, minlength: 1, maxlength: 40}",
+      "roomsTotal": "{type: Number, min: 1}"
     }
 ```
-**Vacancy - Returns:** JSON
+**Room - Returns:** JSON
 
 ```json
     {
       "id": "{ type: Number, unique: true }",
       "hotelId": "{ type: Number, required: true}",
-      "date": "{ type: String, maxlength: 15 }",
-      "isBooked": "{ type: Boolean, required: true }"
+      "roomType": "{ type: String, maxlength: 30 }",
+      "maxGuestPerRoom": "{type: Number, min: 1}",
+      "isBooked": "{ type: Boolean, required: true, default: false }",
+      "isBookable": "{ type: Boolean, required: true, default: true }"
     }
 ```
-**Price - Returns:** JSON
+**Reservation - Returns:** JSON
+
+```json
+    {
+      "id": "{ type: Number, unique: true }",
+      "roomId": "{ type: Number, required: true}",
+      "startDate": "{ type: String, maxlength: 30 }",
+      "endDate": "{ type: String, maxlength: 30 }"
+    }
+```
+**Service - Returns:** JSON
 
 ```json
     {
       "id": "{ type: Number, unique: true }",
       "hotelId": "{ type: Number, required: true }",
-      "serviceName": "{ type: String, minlength: 1, maxlength: 20 }",
-      "price": "{ type: Number, required: true }"
+      "name": "{ type: String, default: '', maxlength: 30 }",
+      "description": "{ type: String, default: '', maxlength: 250 }",
+      "price": "{ type: Number, default: 0}"
     }
 ```
+**ServiceDetail - Returns:** JSON
 
+```json
+    {
+      "id": "{ type: Number, unique: true }",
+      "serviceId": "{ type: Number, required: true }",
+      "availableRoomType": "{ type: String, default: '', maxlength: 50 }"
+    }
+```
 ### Add new info
-  * POST `/api/hotel/`
-  * POST `/api/vacancy`
-  * POST `/api/price`
+  * POST `/api/hotel`
+  * POST `/api/hotelRoom`
+  * POST `/api/roomReservation`
+  * POST `/api/hotelService`
+  * POST `/api/serviceDetail`
 
 **Success Status Code:** `201`
 
@@ -124,8 +150,10 @@ The request format should follow the same format from Get/Read API response.
 
 ### Update info
   * PATCH `/api/hotel/:id`
-  * PATCH `/api/vacancy/:id`
-  * PATCH `/api/price/:id`
+  * PATCH `/api/hotelRoom/:id`
+  * PATCH `/api/roomReservation/:id`
+  * PATCH `/api/hotelService/:id`
+  * PATCH `/api/serviceDetail/:id`
 
 **Path Parameters:**
   * `id` id
@@ -138,29 +166,51 @@ The request format should follow the same format from Get/Read API response.
     // For hotel
     {
       "id": "Number",
-      "hotelName": "{type: String, minlength: 1, maxlength: 40}"
+      "hotelName": "{type: String, maxlength: 50}",
+      "roomsTotal": "Number"
     }
 
-    // For Vacancy
+    // For hotelRoom
     {
-      "hotelId": "Number",
-      "isBooked": "Boolean"
+      "roomId": "Number",
+      "roomType":"String",
+      "maxGuestPerRoom":"Number",
+      "isBookable": "Boolean"
     }
 
-    // For Price
+    // For roomReservation
+    {
+      "reserveId": "Number",
+      "startDate":"String",
+      "endDate":"String"
+    }
+
+    // For hotelService
     {
       "hotelId": "Number",
+      "name": "String",
+      "description":"String",
       "price": "Number"
     }
+
+    // For serviceDetail
+    {
+      "serviceId": "Number",
+      "availableRoomType": "String"
+    }
+
 ```
 
 ### Delete info
   * DELETE `/api/hotel/:id`
-  * DELETE `/api/vacancy/:id`
-  * DELETE `/api/price/:id`
+  * DELETE `/api/hotelRoom/:id`
+  * DELETE `/api/roomReservation/:id`
+  * DELETE `/api/hotelService/:id`
+  * DELETE `/api/serviceDetail/:id`
+
 
 **Path Parameters:**
-  * `id` hotel id / service id / price id
+  * `id` id
 
 **Success Status Code:** `204`
 
