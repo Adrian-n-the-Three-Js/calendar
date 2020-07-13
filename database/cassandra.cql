@@ -1,56 +1,38 @@
-CREATE KEYSPACE IF NOT EXISTS hotelCalendar WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
+CREATE KEYSPACE IF NOT EXISTS hotelCalendar WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
 
 USE hotelCalendar;
 
+-- DROP TABLE IF EXISTS hotels;
+-- DROP TABLE IF EXISTS hotelRooms;
+-- DROP TABLE IF EXISTS roomReservations;
+-- DROP TABLE IF EXISTS hotelServices;
+-- DROP TABLE IF EXISTS serviceDetails;
 
-DROP TABLE IF EXISTS hotels;
-DROP TABLE IF EXISTS hotelRooms;
-DROP TABLE IF EXISTS roomReservations;
-DROP TABLE IF EXISTS hotelServices;
-DROP TABLE IF EXISTS serviceDetails;
+DROP TABLE IF EXISTS reservations_by_hotel_date;
 
+-- DROP TABLE IF EXISTS services_by_room
 
-CREATE TABLE hotels (
+CREATE TABLE IF NOT EXISTS reservations_by_hotel_date (
   id INT,
-  name TEXT,
-  roomsTotal INT,
-  PRIMARY KEY (id)
-);
-
-
-CREATE TABLE hotelRooms (
-  id INT,
-  hotelId INT,
-  roomType TEXT,
-  maxGuestPerRoom INT,
-  isBooked BOOLEAN,
-  isBookable BOOLEAN NOT NULL DEFAULT true,
-  PRIMARY KEY (id)
-);
-
-
-CREATE TABLE roomReservations (
-  id INT,
-  roomlId INT,
+  hotelName TEXT,
+  maxGuest INT,
   startDate TEXT,
   endDate TEXT,
-  PRIMARY KEY (id)
+  PRIMARY KEY ((id, hotelName, startDate))
 );
 
 
-CREATE TABLE hotelServices (
+CREATE TABLE IF NOT EXISTS services_by_room (
   id INT,
-  hotelId INT,
+  roomId INT,
   name TEXT,
   description TEXT,
   price VARINT,
-  PRIMARY KEY (id)
-);
-
-
-CREATE TABLE serviceDetails (
-  id INT,
-  serviceId INT,
   availableRoomType TEXT,
-  PRIMARY KEY (id)
+  PRIMARY KEY ((roomId, id), price, name)
 );
+
+-- cqlsh localhost -u cassandra -p cassandra -f calendar/database/cassandra.cql
+-- COPY hotelcalendar.reservations_by_hotel_date (id, hotelname, maxguest, startdate, enddate) from 'calendar/hotels.csv' with delimiter=',' and header=true;
+
+

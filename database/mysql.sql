@@ -47,27 +47,17 @@ CREATE TABLE IF NOT EXISTS roomReservations (
 
 -- DROP TABLE IF EXISTS hotelServices;
 
-CREATE TABLE IF NOT EXISTS hotelServices (
+CREATE TABLE IF NOT EXISTS hotelProviders (
   id INT NOT NULL AUTO_INCREMENT,
   hotelId INT NOT NULL,
+  roomId INT NOT NULL,
   name VARCHAR(30) NOT NULL  DEFAULT '',
-  description VARCHAR(250) NOT NULL  DEFAULT '',
   price INT NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
-  FOREIGN KEY (hotelId) REFERENCES hotels (id)
+  FOREIGN KEY (hotelId) REFERENCES hotels (id),
+  FOREIGN KEY (roomId) REFERENCES hotelRooms (id)
 );
 
-
-
--- DROP TABLE IF EXISTS serviceDetail;
-
-CREATE TABLE IF NOT EXISTS serviceDetail (
-  id INT NOT NULL AUTO_INCREMENT,
-  serviceId INT NOT NULL,
-  availableRoomType VARCHAR(50) NOT NULL DEFAULT '',
-  PRIMARY KEY (id),
-  FOREIGN KEY (serviceId) REFERENCES hotelServices (id)
-);
 
 
 /*
