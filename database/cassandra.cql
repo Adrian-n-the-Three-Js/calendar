@@ -7,29 +7,31 @@ USE hotelCalendar;
 -- DROP TABLE IF EXISTS roomReservations;
 -- DROP TABLE IF EXISTS hotelServices;
 -- DROP TABLE IF EXISTS serviceDetails;
-
+DROP TABLE IF EXISTS services_by_room;
 DROP TABLE IF EXISTS reservations_by_hotel_date;
 
--- DROP TABLE IF EXISTS services_by_room
+
 
 CREATE TABLE IF NOT EXISTS reservations_by_hotel_date (
   id INT,
+  hotelId INT,
   hotelName TEXT,
+  roomId INT,
   maxGuest INT,
   startDate TEXT,
   endDate TEXT,
-  PRIMARY KEY ((id, hotelName, startDate))
-);
+  PRIMARY KEY (hotelId, roomId, startDate)
+)
 
 
-CREATE TABLE IF NOT EXISTS services_by_room (
+CREATE TABLE IF NOT EXISTS fees_by_room (
   id INT,
   roomId INT,
   name TEXT,
   description TEXT,
   price VARINT,
   availableRoomType TEXT,
-  PRIMARY KEY ((roomId, id), price, name)
+  PRIMARY KEY (roomId, price, name)
 );
 
 -- cqlsh localhost -u cassandra -p cassandra -f calendar/database/cassandra.cql
