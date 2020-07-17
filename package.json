@@ -20,6 +20,7 @@
     "start": "nodemon server/index.js",
     "db-seed": "node database/seed.js",
     "seed-cassandra": "node --max-old-space-size=14316 database/cassandra.js",
+    "seed-mysql": "node --max-old-space-size=14316 database/mysql.js",
     "lint": "eslint client --ext .jsx server --ext .js database --ext .js test --ext .js --fix",
     "react-dev": "webpack --config webpack.dev.js -d --watch",
     "build": "webpack --config webpack.prod.js",

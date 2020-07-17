@@ -1,3 +1,7 @@
+
+
+DROP DATABASE IF EXISTS hotelCalendar;
+
 CREATE DATABASE IF NOT EXISTS hotelCalendar;
 
 USE hotelCalendar;
@@ -61,6 +65,15 @@ CREATE TABLE IF NOT EXISTS hotelProviders (
 
 
 /*
+
+mysql -u noobdev -p < mysql.sql
+
+for f in  *.csv;
+do  mysql -u noobdev -ppost -e "LOAD DATA LOCAL INFILE '"$f"' INTO TABLE roomReservations fields terminated by ',' lines terminated by '\n' ignore 1 lines" hotelCalendar;
+done
+
+
+
 https://stackoverflow.com/questions/201621/how-do-i-see-all-foreign-keys-to-a-table-or-column/201678#201678
 
 Checking Foreign key related to HOTELS tables

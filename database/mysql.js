@@ -51,90 +51,92 @@ process.EventEmitter.defaultMaxListeners = 90;
 
 
 
-// let writeOneMillionHotels = (writer, encoding, id) => {
-//   let i = 10000000;
-//   // let id = 1000000;
-//   let tCounter = 0;
-//   const totalProgress = i / 10000;
-//   const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-//   bar1.start(10000, 0);
-//   let write = () => {
-//     let ok = true;
-//     do {
-//       i -= 1;
-//       const hotelName = '"' + faker.company.companyName() + '"';
-//       const data = `${id++},${hotelName}\n`;
-//       ok = writer.write(data, encoding);
-//       if (!ok) { writer.once('drain', write); ok = true; }
-//       if ( i % totalProgress === 0) {
-//         tCounter += 1;
-//         bar1.update(tCounter);
-//       }
-//     } while (i > 0);
-//     writer.end();
-//     bar1.stop();
-//   };
-//   write();
-// };
+let writeOneMillionHotels = (writer, encoding, id) => {
+  let i = 10000000;
+  // let id = 1000000;
+  let tCounter = 0;
+  const totalProgress = i / 10000;
+  const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+  bar1.start(10000, 0);
+  let write = () => {
+    let ok = true;
+    do {
+      i -= 1;
+      const hotelName = '"' + faker.company.companyName() + '"';
+      const rooms = 10;//faker.randome.number()%5 + 1;
+      const data = `${id++},${hotelName},${rooms}\n`;
+      ok = writer.write(data, encoding);
+      if (!ok) { writer.once('drain', write); ok = true; }
+      if ( i % totalProgress === 0) {
+        tCounter += 1;
+        bar1.update(tCounter);
+      }
+    } while (i > 0);
+    writer.end();
+    bar1.stop();
+  };
+  write();
+};
 // ////WRITE HOTELS
 // let writeHotel = fs.createWriteStream('hotels.csv');//, {flags: 'a'});
-// writeHotel.write('id,name\n', 'utf8');
+// writeHotel.write('id,name,roomsTotal\n', 'utf8');
 // writeOneMillionHotels(writeHotel, 'utf-8', 0);
 
 
 
 
-// let writeOneMillionReservations = (writer, encoding, hotelId = 0 , callback) => {
-//   let i = 0;
-//   let limit = 1000000;
-//   let tCounter = 0;
-//   const totalProgress = limit / 10000;
-//   const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
-//   bar1.start(10000, 0);
-//   let write = () => {
-//     let ok = true;
-//     do {
-//       const totalRooms = 5 + faker.random.number() % 16;
-//       for (let j = 0; j < totalRooms; j++) {
-//         const maxGuest = 1 + faker.random.number() % 7;
-//         const reservationTotal = faker.random.number() % 5;
-//         if (reservationTotal === 0) {
-//           const startDate = 'none';
-//           const endDate = 'none';
-//           const data = `${hotelId},${j},${maxGuest},${startDate},${endDate}\n`;
-//           ok = writer.write(data, encoding);
-//           if (!ok) { writer.once('drain', write); ok = true; }
-//         } else {
-//           for ( let r = 0; r < reservationTotal; r++) {
-//             const reservationDate = reservationDateGen();
-//             const startDate = reservationDate.startDate;
-//             const endDate = reservationDate.endDate;
-//             const data = `${hotelId},${j},${maxGuest},${startDate},${endDate}\n`;
-//             ok = writer.write(data, encoding);
-//             if (!ok) { writer.once('drain', write); ok = true; }
-//           }
-//         }
-//       }
-//       i ++;
-//       hotelId ++;
-//       if ( i % totalProgress === 0) {
-//         tCounter += 1;
-//         bar1.update(tCounter);
-//       }
-//     } while (i < limit);
+let writeOneMillionReservations = (writer, encoding, hotelId = 0 , callback) => {
+  let i = 0;
+  let limit = 1000000;
+  let tCounter = 0;
 
-//     writer.end();
-//     bar1.stop();
-//   };
-//   write();
-// };
+  // let id = 0;
+  let id = 198006776 + 1;
+
+  const totalProgress = limit / 10000;
+  const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+  bar1.start(10000, 0);
+  let write = () => {
+    let ok = true;
+    do {
+      const totalRooms = 10; //5 + faker.random.number() % 16;
+      for (let j = 0; j < totalRooms; j++) {
+        const reservationTotal = faker.random.number() % 5;
+        if (reservationTotal === 0) {
+          const startDate = 'none';
+          const endDate = 'none';
+          if (!ok) { writer.once('drain', write); ok = true; }
+        } else {
+          for ( let r = 0; r < reservationTotal; r++) {
+            const reservationDate = reservationDateGen();
+            const startDate = reservationDate.startDate;
+            const endDate = reservationDate.endDate;
+            const data = `${id++},${hotelId * 10 + j},${startDate},${endDate}\n`;
+            ok = writer.write(data, encoding);
+            if (!ok) { writer.once('drain', write); ok = true; }
+          }
+        }
+      }
+      i ++;
+      hotelId ++;
+      if ( i % totalProgress === 0) {
+        tCounter += 1;
+        bar1.update(tCounter);
+      }
+    } while (i < limit);
+
+    writer.end();
+    bar1.stop();
+  };
+  write();
+};
 // ////WRITE RESERVATIONS
-// let number = 9; //  0~9
-// const writeReservation = fs.createWriteStream(`reservations_${number}.csv`);//, {flags: 'a'});
-// writeReservation.write('hotelId,roomId,maxGuest,startDate,endDate\n', 'utf8');
-// writeOneMillionReservations(writeReservation, 'utf-8', number * (1000000), () => {
-//   writeReservation.end();
-// });
+let number = 9; //  0~9
+const writeReservation = fs.createWriteStream(`reservations_${number}.csv`);//, {flags: 'a'});
+writeReservation.write('id,roomId,startDate,endDate\n', 'utf8');
+writeOneMillionReservations(writeReservation, 'utf-8', number * (1000000), () => {
+  writeReservation.end();
+});
 
 
 
@@ -179,13 +181,13 @@ let writeOneMillionPricelist = (writer, encoding, hotelId = 0, callback) => {
 };
 
 
-////WRITE RESERVATIONS
-let number = 1; //  0~1
-const writePricelist = fs.createWriteStream(`pricelist_${number}.csv`);//, {flags: 'a'});
-writePricelist.write('roomId,name,price\n', 'utf8');
-writeOneMillionPricelist(writePricelist, 'utf-8', 5000000 * number,() => {
-  writePricelist.end();
-});
+////WRITE PRICELIST
+// let number = 1; //  0~1
+// const writePricelist = fs.createWriteStream(`pricelist_${number}.csv`);//, {flags: 'a'});
+// writePricelist.write('roomId,name,price\n', 'utf8');
+// writeOneMillionPricelist(writePricelist, 'utf-8', 5000000 * number,() => {
+//   writePricelist.end();
+// });
 
 //*/
 
@@ -229,6 +231,15 @@ writeOneMillionPricelist(writePricelist, 'utf-8', 5000000 * number,() => {
 //2:24
 
 
+
+/*
+
+mysql
+
+reservations_1.csv 3:22 - 3:36(~)
+3 36 - 3 50
+3 50 -
+*/
 
 
 /*
