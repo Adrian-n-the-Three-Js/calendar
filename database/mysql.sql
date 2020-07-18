@@ -6,6 +6,8 @@ CREATE DATABASE IF NOT EXISTS hotelCalendar;
 
 USE hotelCalendar;
 
+
+
 -- DROP TABLE IF EXISTS hotels;
 
 CREATE TABLE IF NOT EXISTS hotels (
@@ -17,7 +19,7 @@ CREATE TABLE IF NOT EXISTS hotels (
 
 
 
-DROP TABLE IF EXISTS hotelRooms;
+-- DROP TABLE IF EXISTS hotelRooms;
 
 CREATE TABLE IF NOT EXISTS hotelRooms (
   id INT NOT NULL AUTO_INCREMENT,
@@ -69,8 +71,6 @@ mysql -u noobdev -ppost < mysql.sql
 for f in  *.csv;
 do  mysql -u noobdev -ppost -e "LOAD DATA LOCAL INFILE '"$f"' INTO TABLE roomReservations fields terminated by ',' lines terminated by '\n' ignore 1 lines" hotelCalendar;
 done
-
-
 
 
 https://stackoverflow.com/questions/201621/how-do-i-see-all-foreign-keys-to-a-table-or-column/201678#201678
