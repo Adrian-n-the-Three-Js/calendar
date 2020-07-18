@@ -85,7 +85,54 @@ let writeOneMillionHotels = (writer, encoding, id) => {
 
 
 
-let writeOneMillionReservations = (writer, encoding, hotelId = 0 , callback) => {
+let writeOneMillionRooms = (writer, encoding, id) => {
+  let i = 2000000;
+  // let id = 1000000;
+  let tCounter = 0;
+  let hotelId = id;
+  let roomId = hotelId * 10;
+
+  const totalProgress = i / 10000;
+  const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+  bar1.start(10000, 0);
+  let write = () => {
+    let ok = true;
+    do {
+      i -= 1;
+      const roomType = '1Room';
+      const maxGuestPerRoom = faker.random.number()%6 + 1;
+      for (let j = 0; j < 10; j++) {
+        const data = `${roomId++},${hotelId},${roomType},${maxGuestPerRoom}\n`;
+        ok = writer.write(data, encoding);
+        if (!ok) { writer.once('drain', write); ok = true; }
+      }
+      hotelId ++;
+
+      if ( i % totalProgress === 0) {
+        tCounter += 1;
+        bar1.update(tCounter);
+      }
+    } while (i > 0);
+    writer.end();
+    bar1.stop();
+  };
+  write();
+};
+// ////WRITE HOTELROOMS
+let number = 4; // 0~4;
+let writeRoom = fs.createWriteStream(`hotelRooms_${number}.csv`);//, {flags: 'a'});
+writeRoom.write('id,hotelId,roomType,maxGuestPerRoom\n', 'utf8');
+writeOneMillionRooms(writeRoom, 'utf-8', 2000000 * number);
+
+
+
+
+
+
+
+
+
+let writeOneMillionReservations = (writer, encoding, hotelId = 0, callback) => {
   let i = 0;
   let limit = 1000000;
   let tCounter = 0;
@@ -131,12 +178,12 @@ let writeOneMillionReservations = (writer, encoding, hotelId = 0 , callback) => 
   write();
 };
 // ////WRITE RESERVATIONS
-let number = 9; //  0~9
-const writeReservation = fs.createWriteStream(`reservations_${number}.csv`);//, {flags: 'a'});
-writeReservation.write('id,roomId,startDate,endDate\n', 'utf8');
-writeOneMillionReservations(writeReservation, 'utf-8', number * (1000000), () => {
-  writeReservation.end();
-});
+// let number = 9; //  0~9
+// const writeReservation = fs.createWriteStream(`reservations_${number}.csv`);//, {flags: 'a'});
+// writeReservation.write('id,roomId,startDate,endDate\n', 'utf8');
+// writeOneMillionReservations(writeReservation, 'utf-8', number * (1000000), () => {
+//   writeReservation.end();
+// });
 
 
 

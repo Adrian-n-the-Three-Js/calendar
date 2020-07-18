@@ -1,6 +1,6 @@
 
 
-DROP DATABASE IF EXISTS hotelCalendar;
+-- DROP DATABASE IF EXISTS hotelCalendar;
 
 CREATE DATABASE IF NOT EXISTS hotelCalendar;
 
@@ -17,15 +17,13 @@ CREATE TABLE IF NOT EXISTS hotels (
 
 
 
--- DROP TABLE IF EXISTS hotelRooms;
+DROP TABLE IF EXISTS hotelRooms;
 
 CREATE TABLE IF NOT EXISTS hotelRooms (
   id INT NOT NULL AUTO_INCREMENT,
   hotelId INT NOT NULL,
   roomType VARCHAR(30) NOT NULL  DEFAULT '',
   maxGuestPerRoom INT NOT NULL DEFAULT 1,
-  isBooked BOOLEAN NOT NULL DEFAULT false,
-  isBookable BOOLEAN NOT NULL DEFAULT true,
   PRIMARY KEY (id),
   FOREIGN KEY (hotelId) REFERENCES hotels (id)
 );
@@ -33,15 +31,15 @@ CREATE TABLE IF NOT EXISTS hotelRooms (
 
 
 
--- DROP TABLE IF EXISTS roomReservations
+-- DROP TABLE IF EXISTS roomReservations;
 
 CREATE TABLE IF NOT EXISTS roomReservations (
   id INT NOT NULL AUTO_INCREMENT,
-  roomlId INT NOT NULL,
+  roomId INT NOT NULL,
   startDate VARCHAR(30) NOT NULL  DEFAULT '',
   endDate VARCHAR(30) NOT NULL  DEFAULT '',
   PRIMARY KEY (id),
-  FOREIGN KEY (roomlId) REFERENCES hotelRooms (id)
+  FOREIGN KEY (roomId) REFERENCES hotelRooms (id)
 );
 
 
@@ -66,11 +64,12 @@ CREATE TABLE IF NOT EXISTS hotelProviders (
 
 /*
 
-mysql -u noobdev -p < mysql.sql
+mysql -u noobdev -ppost < mysql.sql
 
 for f in  *.csv;
 do  mysql -u noobdev -ppost -e "LOAD DATA LOCAL INFILE '"$f"' INTO TABLE roomReservations fields terminated by ',' lines terminated by '\n' ignore 1 lines" hotelCalendar;
 done
+
 
 
 
