@@ -1,3 +1,5 @@
+require('newrelic');
+
 const express = require('express');
 const app = express();
 const port = 3001;
@@ -54,13 +56,20 @@ const sendResponseWithUpdatedData = (data, req, res) => {
 
   dataItem.maxGuestPerRoom = data.maxGuestPerRoom;//
   dataItem.roomsTotal = data.rooms;
-
+  dataItem.reservations = data.reservations;
 
   let roomsNumber = req.query.roomsNumber;
   let response = true;
-  let newData = [...data];
+  // let newData = [...data];
   let rej = [{'err_msg': ''}];
   let totalNights;
+
+  let date1 = new Date(checkInDate);
+  let date2 = new Date(checkOutDate);
+  let Difference_In_Time = date2.getTime() - date1.getTime();
+  let Difference_In_Days = Math.ceil(Difference_In_Time / (1000 * 3600 * 24));
+  totalNights = Difference_In_Days;
+
 
   if (dataItem.maxGuestPerRoom < guestsNumber) {
     roomsNumber = Math.ceil(guestsNumber / dataItem.maxGuestPerRoom);
@@ -71,31 +80,62 @@ const sendResponseWithUpdatedData = (data, req, res) => {
     response = false;
   }
 
-  let checkInIndex;
-  let checkOutIndex;
-  for (let i = 0; i < dataItem.vacancy.length; i ++) {
-    if (dataItem.vacancy[i].date === checkInDate) {
-      checkInIndex = i;
-    }
-    if (dataItem.vacancy[i].date === checkOutDate) {
-      checkOutIndex = i;
-    }
-  }
-  let timeGap = dataItem.vacancy.slice(checkInIndex, checkOutIndex);
-  totalNights = timeGap.length;
-  for (let j = 0; j < timeGap.length; j++) {
-    if (timeGap[j].isBooked) {
-      rej[0]['err_msg'] += '<your dates are not available>';
-      response = false;
-      break;
-    }
-  }
-  for (let k = 0; k < newData[0].prices.length; k++) {
-    newData[0].prices[k].price *= totalNights * roomsNumber;
-  }
+
+
+  // Iterate Rooms Booking
+  //   Check room reservation
+  //   if ( none ) = take it.
+
+  // Iterate Rooms Booking
+  //   Check room reservation
+  //   if ( 'none' ) = take it.
+  //
+
+
+  //// CHECK AVAILABLE
+  // let checkInIndex;
+  // let checkOutIndex;
+  // for (let i = 0; i < dataItem.vacancy.length; i ++) {
+  //   if (dataItem.vacancy[i].date === checkInDate) {
+  //     checkInIndex = i;
+  //   }
+  //   if (dataItem.vacancy[i].date === checkOutDate) {
+  //     checkOutIndex = i;
+  //   }
+  // }
+
+  //// TIMEGAP
+  // let timeGap = dataItem.vacancy.slice(checkInIndex, checkOutIndex);
+  // totalNights = timeGap.length;
+  // for (let j = 0; j < timeGap.length; j++) {
+  //   if (timeGap[j].isBooked) {
+  //     rej[0]['err_msg'] += '<your dates are not available>';
+  //     response = false;
+  //     break;
+  //   }
+  // }
+
+
+  //// PRICE
+  // for (let k = 0; k < newData[0].prices.length; k++) {
+  //   newData[0].prices[k].price *= totalNights * roomsNumber;
+  // }
+
+  console.log('totalNights', totalNights);
+  console.log('roomsNumber', roomsNumber);
+
+  let recommendations = [];
+  recommendations.push(
+    {
+      name:'hotel.com',
+      totalPrice: 100 * totalNights * roomsNumber
+    });
+
 
   if (response) {
-    res.status(200).send(newData);
+    //// ORIGINAL
+    // res.status(200).send(newData);
+    res.status(200).send(recommendations);
   } else {
     res.status(200).send(rej);
   }
@@ -116,18 +156,19 @@ app.get('/api/calendar/update/', (req, res) => {
   db.findHotelRooms({'id': req.query.id})
     .then( (result) => {
       console.log('DB QUERY SUCCESS');
-      console.log(result);
+      // console.log(result);
       data.rooms = result.length;
       data.maxGuestPerRoom = result[0].maxGuestPerRoom;
       return db.findHotelRoomsInfo({'id': req.query.id});
     })
     .then((result) => {
       data.reservations = result;
-      console.log(data);
+      // console.log(data);
 
-      res.status(200).send(data);
+      //// TESTING without Update
+      // res.status(200).send(data);
 
-      // sendResponseWithUpdatedData(data, req, res);
+      sendResponseWithUpdatedData(data, req, res);
     });
 
 });

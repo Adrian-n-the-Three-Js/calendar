@@ -43,6 +43,7 @@ class App extends React.Component {
   getData (term) {
     const response = getDataFromServer(term);
     response.then((hotel) => {
+      console.log(hotel);
       this.setState({
         currentHotel: hotel
       });
@@ -103,7 +104,7 @@ class App extends React.Component {
     if (!this.state.currentHotel[0]) {
       return 'Loading...';
     } else {
-      const prices = this.state.currentHotel[0].prices;
+      const prices = [{price:10},{price:100}];//this.state.currentHotel[0].prices;
       let smallest = prices[0];
       let biggest = prices[1];
       for (let i = 0; i < prices.length; i++) {
